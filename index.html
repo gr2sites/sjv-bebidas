@@ -37,9 +37,9 @@
         }
         header {
             background: linear-gradient(135deg, var(--primary-escuro) 0%, var(--primary-cinza) 100%);
-            border-bottom: 3px solid var(--primary-dourado);
-            padding-top: 0.5rem !important;
-            padding-bottom: 0.5rem !important;
+            border-bottom: 2px solid var(--primary-dourado);
+            padding-top: 0.25rem !important;
+            padding-bottom: 0.25rem !important;
         }
         .badge {
             font-weight: 600;
@@ -166,31 +166,31 @@
             width: 100%;
         }
         .logo-imagem {
-            max-width: 350px;
+            max-width: 196px;
             width: 100%;
             height: auto;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            margin-bottom: 0.25rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
             transition: transform 0.3s ease;
         }
         .logo-imagem:hover {
             transform: scale(1.02);
         }
         .logo-subtexto {
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
             font-weight: 500;
             color: rgba(255,255,255,0.85);
             border-top: 1px solid var(--primary-dourado);
-            padding-top: 0.3rem;
-            margin-top: 0.3rem;
+            padding-top: 0.2rem;
+            margin-top: 0.2rem;
             display: inline-block;
         }
         @media (max-width: 576px) {
             .logo-imagem {
-                max-width: 260px;
+                max-width: 140px;
             }
-            .logo-subtexto { font-size: 0.7rem; letter-spacing: 2px; }
+            .logo-subtexto { font-size: 0.55rem; letter-spacing: 1px; }
             .produto-imagem {
                 height: 140px;
             }
@@ -238,6 +238,15 @@
         .modal-success .btn-success-modal:hover {
             background-color: #a01830;
             border-color: #a01830;
+        }
+
+        /* Botão do carrinho no header menor */
+        .btn-carrinho-header {
+            width: 36px !important;
+            height: 36px !important;
+        }
+        .btn-carrinho-header i {
+            font-size: 1.1rem !important;
         }
 
         /* ========== CORREÇÃO PARA TELAS MÓVEIS ========== */
@@ -304,13 +313,13 @@
 <body>
 
     <header class="text-white sticky-top shadow-lg">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-3 py-1">
             <div class="logo-container">
-                <img src="imagens/logo-02.png" alt="S J V DE BEBIDAS" class="logo-imagem mx-auto" onerror="this.src='https://via.placeholder.com/350x100?text=SJV+BEBIDAS'">
+                <img src="imagens/logo-01.png" alt="S J V DE BEBIDAS" class="logo-imagem mx-auto" onerror="this.src='https://via.placeholder.com/196x50?text=SJV+BEBIDAS'">
                 <div class="logo-subtexto">DISTRIBUIDORA DE BEBIDAS</div>
-                <div class="mt-2 d-flex justify-content-center gap-3">
-                    <button class="btn position-relative rounded-circle shadow-sm" id="btnCarrinho" data-bs-toggle="offcanvas" data-bs-target="#carrinhoOffcanvas" style="width: 42px; height: 42px; background-color: var(--primary-dourado); color: var(--primary-escuro); border: none;">
-                        <i class="bi bi-cart3 fs-5"></i>
+                <div class="mt-1 d-flex justify-content-center gap-3">
+                    <button class="btn position-relative rounded-circle shadow-sm btn-carrinho-header" id="btnCarrinho" data-bs-toggle="offcanvas" data-bs-target="#carrinhoOffcanvas" style="background-color: var(--primary-dourado); color: var(--primary-escuro); border: none;">
+                        <i class="bi bi-cart3"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="badgeCarrinho" style="display: none;">0</span>
                     </button>
                 </div>
@@ -318,10 +327,10 @@
         </div>
     </header>
 
-    <section class="py-5" style="background-color: var(--primary-bg-claro);">
+    <section class="py-4" style="background-color: var(--primary-bg-claro);">
         <div class="container-fluid px-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                <h2 class="fw-bold mb-0" style="border-left: 5px solid var(--primary-dourado); padding-left: 15px;">Catálogo de Bebidas</h2>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <h2 class="fw-bold mb-0 fs-4" style="border-left: 5px solid var(--primary-dourado); padding-left: 15px;">Catálogo de Bebidas</h2>
                 <small class="text-muted"><i class="bi bi-tag-fill" style="color: var(--primary-dourado);"></i> Preços especiais em fardos</small>
             </div>
             <div id="produtosContainer" class="row g-4" style="display: grid;"></div>
@@ -416,9 +425,9 @@
         </div>
     </div>
 
-    <footer class="text-white text-center py-4 mt-5">
-        <p class="mb-0">🥂 S J V DE BEBIDAS - Sua melhor escolha em bebidas <i class="bi bi-cup-straw" style="color: var(--primary-dourado);"></i></p>
-        <small class="text-muted">Desenvolvido com elegância e sabor | Compre em fardos e economize!</small>
+    <footer class="text-white text-center py-3 mt-4">
+        <p class="mb-0 small">🥂 S J V DE BEBIDAS - Sua melhor escolha em bebidas <i class="bi bi-cup-straw" style="color: var(--primary-dourado);"></i></p>
+        <small class="text-muted" style="font-size: 0.7rem;">Desenvolvido com elegância e sabor | Compre em fardos e economize!</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -749,7 +758,6 @@
         // ========== HANDLERS LOCAIS (não alteram o carrinho) ==========
         function handleLocalIncrement(e) {
             e.stopPropagation();
-            const id = parseInt(e.currentTarget.getAttribute('data-id'));
             const card = e.currentTarget.closest('.card');
             const qtdInput = card.querySelector('.quantidade-local');
             let currentValue = parseInt(qtdInput.value) || 0;
@@ -759,7 +767,6 @@
 
         function handleLocalDecrement(e) {
             e.stopPropagation();
-            const id = parseInt(e.currentTarget.getAttribute('data-id'));
             const card = e.currentTarget.closest('.card');
             const qtdInput = card.querySelector('.quantidade-local');
             let currentValue = parseInt(qtdInput.value) || 0;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>S J V DE BEBIDAS - Cardápio Digital</title>
+    <title>S J V DE BEBIDAS - Cardápio Digital com Fardos</title>
     
     <!-- Bootstrap 5 + Icons + Tailwind CDN (styles only) + Google Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,6 +20,7 @@
             --primary-cinza: #2c2c2c;
             --primary-dourado-claro: #f5e6b0;
             --primary-bg-claro: #fef8e7;
+            --economia-verde: #2e7d32;
             
             --orange-500: #c41e3a;
             --orange-100: #fce4e8;
@@ -123,7 +124,7 @@
         /* CORREÇÃO: Remove barra lateral de rolagem */
         #produtosContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             width: 100%;
             margin: 0;
@@ -204,8 +205,31 @@
             padding: 1.5rem;
             text-align: center;
         }
+        .economia-badge {
+            font-size: 0.7rem;
+            background-color: var(--economia-verde);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+        }
+        .tipo-select {
+            font-size: 0.85rem;
+            border-color: var(--primary-dourado);
+        }
+        .preco-destaque {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-vermelho);
+        }
+        .preco-original {
+            font-size: 0.75rem;
+            text-decoration: line-through;
+            color: #999;
+            margin-left: 0.5rem;
+        }
 
-        /* ========== CORREÇÃO PARA TELAS MÓVEIS (SEM ALTERAR CÓDIGO EXISTENTE) ========== */
+        /* ========== CORREÇÃO PARA TELAS MÓVEIS ========== */
         @media (max-width: 768px) {
             .produto-imagem {
                 height: auto !important;
@@ -235,9 +259,8 @@
                 font-size: 3rem;
             }
             
-            /* Ajuste do card para não quebrar layout */
             .card-body {
-                padding: 0.50rem !important;
+                padding: 0.75rem !important;
             }
         }
 
@@ -248,7 +271,7 @@
             }
             
             .produto-imagem img {
-                max-height: 200px !important;
+                max-height: 120px !important;
             }
             
             .produto-imagem-placeholder i {
@@ -256,7 +279,6 @@
             }
         }
 
-        /* Garantia de que imagens com erro também fiquem boas */
         .produto-imagem img[src=""],
         .produto-imagem img:not([src]) {
             display: none;
@@ -273,7 +295,7 @@
     <header class="text-white sticky-top shadow-lg">
         <div class="container-fluid px-4">
             <div class="logo-container">
-                <img src="imagens/logo-02.png" alt="S J V DE BEBIDAS" class="logo-imagem mx-auto">
+                <img src="imagens/logo-02.png" alt="S J V DE BEBIDAS" class="logo-imagem mx-auto" onerror="this.src='https://via.placeholder.com/350x100?text=SJV+BEBIDAS'">
                 <div class="logo-subtexto">DISTRIBUIDORA DE BEBIDAS</div>
                 <div class="mt-2 d-flex justify-content-center gap-3">
                     <button class="btn position-relative rounded-circle shadow-sm" id="btnCarrinho" data-bs-toggle="offcanvas" data-bs-target="#carrinhoOffcanvas" style="width: 42px; height: 42px; background-color: var(--primary-dourado); color: var(--primary-escuro); border: none;">
@@ -289,7 +311,7 @@
         <div class="container-fluid px-4">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                 <h2 class="fw-bold mb-0" style="border-left: 5px solid var(--primary-dourado); padding-left: 15px;">Catálogo de Bebidas</h2>
-                <small class="text-muted"><i class="bi bi-tag-fill" style="color: var(--primary-dourado);"></i> Preços especiais</small>
+                <small class="text-muted"><i class="bi bi-tag-fill" style="color: var(--primary-dourado);"></i> Preços especiais em fardos</small>
             </div>
             <div id="produtosContainer" class="row g-4" style="display: grid;"></div>
         </div>
@@ -303,7 +325,7 @@
         <div class="offcanvas-body p-0 d-flex flex-column">
             <div id="carrinhoItens" class="p-3 border-bottom">
                 <h6 class="fw-bold mb-3"><i class="bi bi-bag"></i> Itens <span class="badge ms-1" id="badgeItens" style="background-color: var(--primary-dourado); color: var(--primary-escuro);">0</span></h6>
-                <div id="listaItens">...</div>
+                <div id="listaItens">Carregando...</div>
             </div>
             <div class="p-3 border-bottom" style="background-color: #fff8eb;">
                 <div class="d-flex justify-content-between mb-2">
@@ -357,33 +379,159 @@
 
     <footer class="text-white text-center py-4 mt-5">
         <p class="mb-0">🥂 S J V DE BEBIDAS - Sua melhor escolha em bebidas <i class="bi bi-cup-straw" style="color: var(--primary-dourado);"></i></p>
-        <small class="text-muted">Desenvolvido com elegância e sabor</small>
+        <small class="text-muted">Desenvolvido com elegância e sabor | Compre em fardos e economize!</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Catálogo de produtos
-        const produtos = {
-            refrigerantes: [
-                { id: 1, nome: 'Amstel 350ml', preco: 5.00, categoria: 'cerveja', imagem: 'imagens/Amstel-lata.png' },
+        // ========== CATÁLOGO DE PRODUTOS COM SUPORTE A FARDOS ==========
+        const produtos = [
+            { 
+                id: 1, 
+                nome: 'Amstel 350ml', 
+                categoria: 'cervejas', 
+                imagem: 'imagens/Amstel-lata.png',
+                precos: {
+                    unidade: 5.00,
+                    fardo6: 28.00,
+                    fardo12: 52.00
+                }
+            },
+            { 
+                id: 2, 
+                nome: 'Amstel 600ml', 
+                categoria: 'cervejas', 
+                imagem: 'imagens/Amstel-600.png',
+                precos: {
+                    unidade: 12.00,
+                    fardo6: 66.00,
+                    fardo12: 120.00
+                }
+            },
+            { 
+                id: 3, 
+                nome: 'Coca-Cola Zero 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/cocazero.jpg',
+                precos: {
+                    unidade: 5.00,
+                    fardo6: 27.00,
+                    fardo12: 50.00
+                }
+            },
+            { 
+                id: 4, 
+                nome: 'Guaraná Antarctica 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/guarana350.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            },
+            { 
+                id: 5, 
+                nome: 'Guaraná Antarctica 2L', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/guarana2l.jpg',
+                precos: {
+                    unidade: 10.00,
+                    fardo6: 54.00,
+                    fardo12: 100.00
+                }
+            },
+            { 
+                id: 6, 
+                nome: 'Fanta Laranja 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/fanta.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            },
+            { 
+                id: 7, 
+                nome: 'Fanta Uva 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/fantauva.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            },
+            { 
+                id: 8, 
+                nome: 'Sprite 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/sprite.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            },
+            { 
+                id: 9, 
+                nome: 'Pepsi 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/pepsi.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            },
+            { 
+                id: 10, 
+                nome: 'Kuat 350ml', 
+                categoria: 'refrigerantes', 
+                imagem: 'imagens/kuat.jpg',
+                precos: {
+                    unidade: 4.50,
+                    fardo6: 24.00,
+                    fardo12: 45.00
+                }
+            }
+        ];
 
-                { id: 2, nome: 'Amstel 600ml', preco: 12.00, categoria: 'refrigerantes', imagem: 'imagens/Amstel-600.png' },
-                { id: 3, nome: 'Coca-Cola Zero 350ml', preco: 5.00, categoria: 'refrigerantes', imagem: 'imagens/cocazero.jpg' },
-                { id: 4, nome: 'Guaraná Antarctica 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/guarana350.jpg' },
-                { id: 5, nome: 'Guaraná Antarctica 2L', preco: 10.00, categoria: 'refrigerantes', imagem: 'imagens/guarana2l.jpg' },
-                { id: 6, nome: 'Fanta Laranja 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/fanta.jpg' },
-                { id: 7, nome: 'Fanta Uva 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/fantauva.jpg' },
-                { id: 8, nome: 'Sprite 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/sprite.jpg' },
-                { id: 9, nome: 'Pepsi 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/pepsi.jpg' },
-                { id: 10, nome: 'Kuat 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/kuat.jpg' },
-            ],
-        };
-
-        function getTodosProdutos() {
-            return Object.values(produtos).flat();
+        // ========== FUNÇÕES AUXILIARES ==========
+        function getPrecoProduto(produto, tipo) {
+            return produto.precos[tipo];
         }
 
+        function getNomeTipo(tipo) {
+            const tipos = {
+                'unidade': 'Unidade',
+                'fardo6': 'Fardo com 6',
+                'fardo12': 'Fardo com 12'
+            };
+            return tipos[tipo];
+        }
+
+        function getQuantidadeUnidades(tipo) {
+            const quantidades = {
+                'unidade': 1,
+                'fardo6': 6,
+                'fardo12': 12
+            };
+            return quantidades[tipo];
+        }
+
+        function calcularEconomia(produto, tipo) {
+            if (tipo === 'unidade') return 0;
+            const unidades = getQuantidadeUnidades(tipo);
+            const precoUnidade = produto.precos.unidade;
+            const precoFardo = produto.precos[tipo];
+            const economia = (precoUnidade * unidades) - precoFardo;
+            return economia;
+        }
+
+        // ========== ESTRUTURA DO CARRINHO ==========
         let carrinho = [];
 
         // DOM elements
@@ -402,120 +550,134 @@
         const modoEntrega = document.getElementById('modoEntrega');
         const formaPagamento = document.getElementById('formaPagamento');
 
+        // ========== FUNÇÕES DO CARRINHO ==========
         function salvarCarrinho() {
-            localStorage.setItem('carrinho_sjv', JSON.stringify(carrinho));
+            localStorage.setItem('carrinho_sjv_fardos', JSON.stringify(carrinho));
         }
 
         function carregarCarrinho() {
-            const saved = localStorage.getItem('carrinho_sjv');
+            const saved = localStorage.getItem('carrinho_sjv_fardos');
             if (saved) {
                 carrinho = JSON.parse(saved);
-                atualizarTodosCards();
-                atualizarCarrinhoUI();
+                atualizarUICompleta();
             }
         }
 
-        // Função para atualizar todos os cards baseado no carrinho atual
-        function atualizarTodosCards() {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const produtoId = parseInt(card.getAttribute('data-produto-id'));
-                if (produtoId) {
-                    const itemCarrinho = carrinho.find(item => item.id === produtoId);
-                    const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
-                    
-                    const inputQuantidade = card.querySelector('.quantidade-input');
-                    const botaoAdicionar = card.querySelector('.btn-adicionar');
-                    
-                    if (inputQuantidade) {
-                        inputQuantidade.value = quantidade;
-                    }
-                    
-                    if (botaoAdicionar) {
-                        if (quantidade > 0) {
-                            botaoAdicionar.innerHTML = '<i class="bi bi-check-circle-fill"></i> Adicionado';
-                            botaoAdicionar.style.backgroundColor = '#c41e3a';
-                            botaoAdicionar.style.borderColor = '#c41e3a';
-                            botaoAdicionar.style.color = 'white';
-                            botaoAdicionar.classList.remove('btn-outline-warning');
-                            botaoAdicionar.classList.add('btn-success');
-                        } else {
-                            botaoAdicionar.innerHTML = '<i class="bi bi-cart-plus"></i> Adicionar';
-                            botaoAdicionar.style.backgroundColor = 'transparent';
-                            botaoAdicionar.style.borderColor = 'var(--primary-dourado)';
-                            botaoAdicionar.style.color = 'var(--primary-escuro)';
-                            botaoAdicionar.classList.remove('btn-success');
-                            botaoAdicionar.classList.add('btn-outline-warning');
-                        }
-                    }
-                }
-            });
+        function adicionarAoCarrinho(id, tipo, quantidade = 1) {
+            const produto = produtos.find(p => p.id === id);
+            if (!produto) return;
+            
+            const precoUnitario = getPrecoProduto(produto, tipo);
+            const itemExistente = carrinho.find(item => item.id === id && item.tipo === tipo);
+            
+            if (itemExistente) {
+                itemExistente.quantidade += quantidade;
+                itemExistente.precoTotal = itemExistente.quantidade * itemExistente.precoUnitario;
+            } else {
+                carrinho.push({
+                    id: id,
+                    nome: produto.nome,
+                    tipo: tipo,
+                    tipoNome: getNomeTipo(tipo),
+                    quantidade: quantidade,
+                    precoUnitario: precoUnitario,
+                    precoTotal: precoUnitario * quantidade,
+                    unidades: getQuantidadeUnidades(tipo) * quantidade
+                });
+            }
+            
+            salvarCarrinho();
+            atualizarUICompleta();
         }
 
-        // Função para atualizar apenas o card específico
-        function atualizarCard(produtoId) {
-            const card = document.querySelector(`.card[data-produto-id="${produtoId}"]`);
-            if (card) {
-                const itemCarrinho = carrinho.find(item => item.id === produtoId);
-                const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
-                
-                const inputQuantidade = card.querySelector('.quantidade-input');
-                const botaoAdicionar = card.querySelector('.btn-adicionar');
-                
-                if (inputQuantidade) {
-                    inputQuantidade.value = quantidade;
-                }
-                
-                if (botaoAdicionar) {
-                    if (quantidade > 0) {
-                        botaoAdicionar.innerHTML = '<i class="bi bi-check-circle-fill"></i> Adicionado';
-                        botaoAdicionar.style.backgroundColor = '#c41e3a';
-                        botaoAdicionar.style.borderColor = '#c41e3a';
-                        botaoAdicionar.style.color = 'white';
-                        botaoAdicionar.classList.remove('btn-outline-warning');
-                        botaoAdicionar.classList.add('btn-success');
-                    } else {
-                        botaoAdicionar.innerHTML = '<i class="bi bi-cart-plus"></i> Adicionar';
-                        botaoAdicionar.style.backgroundColor = 'transparent';
-                        botaoAdicionar.style.borderColor = 'var(--primary-dourado)';
-                        botaoAdicionar.style.color = 'var(--primary-escuro)';
-                        botaoAdicionar.classList.remove('btn-success');
-                        botaoAdicionar.classList.add('btn-outline-warning');
-                    }
+        function removerDoCarrinho(id, tipo) {
+            const index = carrinho.findIndex(item => item.id === id && item.tipo === tipo);
+            if (index !== -1) {
+                carrinho.splice(index, 1);
+                salvarCarrinho();
+                atualizarUICompleta();
+            }
+        }
+
+        function atualizarQuantidadeItem(id, tipo, novaQuantidade) {
+            const item = carrinho.find(item => item.id === id && item.tipo === tipo);
+            if (item) {
+                if (novaQuantidade <= 0) {
+                    removerDoCarrinho(id, tipo);
+                } else {
+                    item.quantidade = novaQuantidade;
+                    item.precoTotal = item.quantidade * item.precoUnitario;
+                    item.unidades = getQuantidadeUnidades(tipo) * novaQuantidade;
+                    salvarCarrinho();
+                    atualizarUICompleta();
                 }
             }
         }
 
-        // Renderização dos cards (apenas uma vez na inicialização)
+        function limparCarrinho() {
+            if (confirm('❓ Tem certeza que deseja limpar todo o carrinho?')) {
+                carrinho = [];
+                salvarCarrinho();
+                atualizarUICompleta();
+            }
+        }
+
+        // ========== RENDERIZAÇÃO DOS PRODUTOS ==========
         function renderizarTodosProdutos() {
-            const produtosList = getTodosProdutos();
             produtosContainer.innerHTML = '';
             
-            produtosList.forEach(produto => {
-                const itemCarrinho = carrinho.find(item => item.id === produto.id);
-                const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
+            produtos.forEach(produto => {
+                const itensCarrinho = carrinho.filter(item => item.id === produto.id);
+                const quantidadeTotal = itensCarrinho.reduce((sum, item) => sum + item.quantidade, 0);
                 
-                let iconeBebida = 'bi-cup-straw';
-                if (produto.categoria === 'refrigerantes') iconeBebida = 'bi-droplet';
+                // Calcular economias para exibição
+                const economia6 = calcularEconomia(produto, 'fardo6');
+                const economia12 = calcularEconomia(produto, 'fardo12');
                 
                 const col = document.createElement('div');
                 col.className = 'col';
                 col.innerHTML = `
                     <div class="card h-100 border-2 shadow-sm rounded-4 overflow-hidden" data-produto-id="${produto.id}">
                         <div class="produto-imagem">
-                            <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'produto-imagem-placeholder\'><i class=\'bi ${iconeBebida}\'></i></div>';">
+                            <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy" 
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'produto-imagem-placeholder\\'><i class=\\'bi bi-cup-straw\\'></i></div>'">
                         </div>
                         <div class="card-body d-flex flex-column p-3">
                             <h6 class="card-title fw-bold text-dark">${produto.nome}</h6>
-                            <p class="text-muted small mb-2">Bebida exclusiva SJV</p>
-                            <p class="fw-bold fs-4 mb-3" style="color: var(--primary-vermelho);">R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
-                            <div class="d-flex gap-2 align-items-center mt-auto">
-                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-decrement" data-id="${produto.id}"><i class="bi bi-dash-lg"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center bg-light quantidade-input" value="${quantidade}" readonly style="max-width: 55px; font-weight:600;">
-                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-increment" data-id="${produto.id}"><i class="bi bi-plus-lg"></i></button>
+                            <p class="text-muted small mb-2">${produto.categoria.toUpperCase()}</p>
+                            
+                            <!-- Selector de tipo de compra -->
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Tipo de compra:</label>
+                                <select class="form-select form-select-sm tipo-select" data-id="${produto.id}">
+                                    <option value="unidade">Unidade - R$ ${produto.precos.unidade.toFixed(2)}</option>
+                                    <option value="fardo6">Fardo com 6 - R$ ${produto.precos.fardo6.toFixed(2)} ${economia6 > 0 ? `<span class="economia-badge">Economize R$ ${economia6.toFixed(2)}</span>` : ''}</option>
+                                    <option value="fardo12">Fardo com 12 - R$ ${produto.precos.fardo12.toFixed(2)} ${economia12 > 0 ? `<span class="economia-badge">Economize R$ ${economia12.toFixed(2)}</span>` : ''}</option>
+                                </select>
                             </div>
-                            <button class="btn fw-semibold mt-3 w-100 btn-adicionar ${quantidade > 0 ? 'btn-success text-white' : 'btn-outline-warning'}" data-id="${produto.id}" data-nome="${produto.nome}" data-preco="${produto.preco}" style="${quantidade > 0 ? 'background-color: #c41e3a; border-color:#c41e3a;' : 'border-color: var(--primary-dourado); color:var(--primary-escuro);'}">
-                                ${quantidade > 0 ? '<i class="bi bi-check-circle-fill"></i> Adicionado' : '<i class="bi bi-cart-plus"></i> Adicionar'}
+                            
+                            <!-- Preço por unidade (quando aplicável) -->
+                            <div class="text-center mb-2">
+                                <span class="preco-destaque">R$ ${produto.precos.unidade.toFixed(2)}</span>
+                                <span class="preco-original">por unidade</span>
+                            </div>
+                            
+                            <!-- Quantidade e botões -->
+                            <div class="d-flex gap-2 align-items-center justify-content-center mt-2">
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-decrement" data-id="${produto.id}">
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                                <input type="text" class="form-control form-control-sm text-center bg-light quantidade-input" 
+                                       value="${quantidadeTotal}" readonly style="max-width: 55px; font-weight:600;" data-id="${produto.id}">
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-increment" data-id="${produto.id}">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </div>
+                            
+                            <button class="btn fw-semibold mt-3 w-100 btn-adicionar ${quantidadeTotal > 0 ? 'btn-success' : 'btn-outline-warning'}" 
+                                    data-id="${produto.id}" 
+                                    style="${quantidadeTotal > 0 ? 'background-color: #c41e3a; border-color:#c41e3a; color:white;' : 'border-color: var(--primary-dourado); color:var(--primary-escuro);'}">
+                                ${quantidadeTotal > 0 ? '<i class="bi bi-check-circle-fill"></i> Adicionado' : '<i class="bi bi-cart-plus"></i> Adicionar'}
                             </button>
                         </div>
                     </div>
@@ -524,7 +686,10 @@
                 produtosContainer.appendChild(col);
             });
             
-            // Adicionar event listeners
+            adicionarEventListeners();
+        }
+
+        function adicionarEventListeners() {
             document.querySelectorAll('.btn-increment').forEach(btn => {
                 btn.removeEventListener('click', handleIncrement);
                 btn.addEventListener('click', handleIncrement);
@@ -538,105 +703,125 @@
                 btn.addEventListener('click', handleAdd);
             });
         }
-        
-        // Handlers
+
+        // ========== HANDLERS ==========
         function handleIncrement(e) {
             e.stopPropagation();
             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-            const produto = getTodosProdutos().find(p => p.id === id);
-            if (produto) {
-                const item = carrinho.find(i => i.id === id);
-                if (item) {
-                    item.quantidade++;
-                } else {
-                    carrinho.push({ id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
-                }
-                salvarCarrinho();
-                atualizarCard(id);
-                atualizarCarrinhoUI();
-            }
+            const card = e.currentTarget.closest('.card');
+            const tipoSelect = card.querySelector('.tipo-select');
+            const tipo = tipoSelect.value;
+            adicionarAoCarrinho(id, tipo, 1);
         }
-        
+
         function handleDecrement(e) {
             e.stopPropagation();
             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-            const item = carrinho.find(i => i.id === id);
+            const card = e.currentTarget.closest('.card');
+            const tipoSelect = card.querySelector('.tipo-select');
+            const tipo = tipoSelect.value;
+            
+            const item = carrinho.find(item => item.id === id && item.tipo === tipo);
             if (item) {
                 if (item.quantidade > 1) {
-                    item.quantidade--;
+                    atualizarQuantidadeItem(id, tipo, item.quantidade - 1);
                 } else {
-                    carrinho = carrinho.filter(i => i.id !== id);
+                    removerDoCarrinho(id, tipo);
                 }
-                salvarCarrinho();
-                atualizarCard(id);
-                atualizarCarrinhoUI();
             }
         }
-        
+
         function handleAdd(e) {
             e.stopPropagation();
             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-            const nome = e.currentTarget.getAttribute('data-nome');
-            const preco = parseFloat(e.currentTarget.getAttribute('data-preco'));
+            const card = e.currentTarget.closest('.card');
+            const tipoSelect = card.querySelector('.tipo-select');
+            const tipo = tipoSelect.value;
+            adicionarAoCarrinho(id, tipo, 1);
+        }
+
+        // ========== ATUALIZAÇÃO DA UI ==========
+        function atualizarUICompleta() {
+            // Atualizar cards
+            produtos.forEach(produto => {
+                const card = document.querySelector(`.card[data-produto-id="${produto.id}"]`);
+                if (!card) return;
+                
+                const itensProduto = carrinho.filter(item => item.id === produto.id);
+                const quantidadeTotal = itensProduto.reduce((sum, item) => sum + item.quantidade, 0);
+                
+                const qtdInput = card.querySelector('.quantidade-input');
+                if (qtdInput) qtdInput.value = quantidadeTotal;
+                
+                const btnAdd = card.querySelector('.btn-adicionar');
+                if (quantidadeTotal > 0) {
+                    btnAdd.innerHTML = '<i class="bi bi-check-circle-fill"></i> Adicionado';
+                    btnAdd.style.backgroundColor = '#c41e3a';
+                    btnAdd.style.borderColor = '#c41e3a';
+                    btnAdd.style.color = 'white';
+                    btnAdd.classList.remove('btn-outline-warning');
+                    btnAdd.classList.add('btn-success');
+                } else {
+                    btnAdd.innerHTML = '<i class="bi bi-cart-plus"></i> Adicionar';
+                    btnAdd.style.backgroundColor = 'transparent';
+                    btnAdd.style.borderColor = 'var(--primary-dourado)';
+                    btnAdd.style.color = 'var(--primary-escuro)';
+                    btnAdd.classList.remove('btn-success');
+                    btnAdd.classList.add('btn-outline-warning');
+                }
+            });
             
-            const item = carrinho.find(i => i.id === id);
-            if (item) {
-                item.quantidade++;
-            } else {
-                carrinho.push({ id, nome, preco, quantidade: 1 });
-            }
-            salvarCarrinho();
-            atualizarCard(id);
             atualizarCarrinhoUI();
         }
-        
-        function removerDoCarrinho(id) {
-            carrinho = carrinho.filter(i => i.id !== id);
-            salvarCarrinho();
-            atualizarCard(id);
-            atualizarCarrinhoUI();
-        }
-        
-        function limparCarrinho() {
-            if (confirm('❓ Tem certeza que deseja limpar todo o carrinho?')) {
-                carrinho = [];
-                salvarCarrinho();
-                atualizarTodosCards();
-                atualizarCarrinhoUI();
-            }
-        }
-        
+
         function atualizarCarrinhoUI() {
-            const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+            const total = carrinho.reduce((acc, i) => acc + i.precoTotal, 0);
             const totalItens = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+            const totalUnidades = carrinho.reduce((acc, i) => acc + i.unidades, 0);
             
             if (totalItens > 0) {
                 badgeCarrinho.style.display = 'inline-block';
                 badgeCarrinho.textContent = totalItens;
-                badgeItens.textContent = totalItens;
+                badgeItens.innerHTML = `${totalItens} ${totalItens === 1 ? 'item' : 'itens'} <small class="text-muted">(${totalUnidades} unidades)</small>`;
                 formularioPedido.style.display = 'block';
             } else {
                 badgeCarrinho.style.display = 'none';
                 formularioPedido.style.display = 'none';
-                badgeItens.textContent = '0';
+                badgeItens.innerHTML = '0';
             }
             
             subtotalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
             totalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
             
-            // Renderizar itens do carrinho
             if (!carrinho.length) {
                 listaItens.innerHTML = '<p class="text-muted text-center py-4"><i class="bi bi-cart-x"></i> Seu carrinho está vazio</p>';
             } else {
-                listaItens.innerHTML = carrinho.map(item => `
-                    <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 shadow-sm mb-2 border">
-                        <div>
-                            <p class="fw-semibold mb-1">${item.nome}</p>
-                            <small class="text-muted"><span class="badge me-2" style="background-color: var(--primary-dourado); color: #1a1a1a;">${item.quantidade}</span> R$ ${item.preco.toFixed(2).replace('.', ',')}</small>
+                listaItens.innerHTML = carrinho.map(item => {
+                    const produto = produtos.find(p => p.id === item.id);
+                    const economia = calcularEconomia(produto, item.tipo);
+                    return `
+                        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 shadow-sm mb-2 border">
+                            <div class="flex-grow-1">
+                                <p class="fw-semibold mb-1">${item.nome}</p>
+                                <small class="text-muted d-block">
+                                    <span class="badge me-1" style="background-color: var(--primary-dourado); color: #1a1a1a;">
+                                        ${item.tipoNome}
+                                    </span>
+                                    ${item.quantidade} x R$ ${item.precoUnitario.toFixed(2).replace('.', ',')}
+                                    ${economia > 0 ? `<span class="text-success ms-2">(economia de R$ ${(economia * item.quantidade).toFixed(2).replace('.', ',')})</span>` : ''}
+                                </small>
+                                <small class="text-success fw-bold d-block mt-1">
+                                    Total: R$ ${item.precoTotal.toFixed(2).replace('.', ',')} | 
+                                    <span class="text-info">${item.unidades} unidades</span>
+                                </small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger rounded-circle btn-remover-carrinho" 
+                                    data-id="${item.id}" data-tipo="${item.tipo}">
+                                <i class="bi bi-trash3"></i>
+                            </button>
                         </div>
-                        <button class="btn btn-sm btn-outline-danger rounded-circle btn-remover-carrinho" data-id="${item.id}"><i class="bi bi-trash3"></i></button>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
                 
                 document.querySelectorAll('.btn-remover-carrinho').forEach(btn => {
                     btn.removeEventListener('click', handleRemove);
@@ -644,35 +829,61 @@
                 });
             }
         }
-        
+
         function handleRemove(e) {
             const id = parseInt(e.currentTarget.getAttribute('data-id'));
-            removerDoCarrinho(id);
+            const tipo = e.currentTarget.getAttribute('data-tipo');
+            removerDoCarrinho(id, tipo);
         }
-        
+
+        // ========== FINALIZAR PEDIDO ==========
         function finalizarPedido() {
             if (!nomeCliente.value.trim() || !telefone.value.trim()) {
                 alert('⚠️ Preencha os campos obrigatórios: Nome e Telefone/WhatsApp.');
                 return;
             }
+            
             if (carrinho.length === 0) {
                 alert('Seu carrinho está vazio. Adicione itens antes de finalizar!');
                 return;
             }
             
-            const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
-            const itensTexto = carrinho.map(i => `${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2).replace('.', ',')})`).join('\n');
+            const total = carrinho.reduce((acc, i) => acc + i.precoTotal, 0);
+            const totalUnidades = carrinho.reduce((acc, i) => acc + i.unidades, 0);
+            
+            const itensTexto = carrinho.map(i => {
+                let descricao = `${i.quantidade}x ${i.tipoNome} de ${i.nome}`;
+                if (i.tipo === 'fardo6') descricao += ` (6 unidades/fardo)`;
+                if (i.tipo === 'fardo12') descricao += ` (12 unidades/fardo)`;
+                descricao += ` - R$ ${i.precoTotal.toFixed(2).replace('.', ',')}`;
+                return descricao;
+            }).join('\n');
+            
             const entregaText = modoEntrega.value === 'entrega' ? '🚚 Delivery' : '🏬 Retirada no local';
             const pagamentoText = formaPagamento.options[formaPagamento.selectedIndex]?.text || formaPagamento.value;
-            const mensagem = `*🟡 NOVO PEDIDO - S J V DE BEBIDAS 🟡*\n\n*Cliente:* ${nomeCliente.value.trim()}\n*Telefone:* ${telefone.value.trim()}\n*Email:* ${email.value.trim() || 'Não informado'}\n*Entrega:* ${entregaText}\n*Pagamento:* ${pagamentoText}\n\n*ITENS DO PEDIDO:*\n${itensTexto}\n\n*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*\n\nAgradecemos pela preferência! 🍻`;
+            
+            const mensagem = `*🟡 NOVO PEDIDO - S J V DE BEBIDAS 🟡*\n\n` +
+                            `*Cliente:* ${nomeCliente.value.trim()}\n` +
+                            `*Telefone:* ${telefone.value.trim()}\n` +
+                            `*Email:* ${email.value.trim() || 'Não informado'}\n` +
+                            `*Entrega:* ${entregaText}\n` +
+                            `*Pagamento:* ${pagamentoText}\n\n` +
+                            `*ITENS DO PEDIDO:*\n${itensTexto}\n\n` +
+                            `*RESUMO:*\n` +
+                            `• Total de itens: ${carrinho.reduce((acc, i) => acc + i.quantidade, 0)}\n` +
+                            `• Total de unidades: ${totalUnidades}\n` +
+                            `*TOTAL DO PEDIDO: R$ ${total.toFixed(2).replace('.', ',')}*\n\n` +
+                            `Agradecemos pela preferência! 🍻\n` +
+                            `*S J V DE BEBIDAS - Sua melhor escolha!*`;
+            
             const numeroWhats = '5516991234567';
             const url = `https://wa.me/${numeroWhats}?text=${encodeURIComponent(mensagem)}`;
             window.open(url, '_blank');
             
+            // Limpar carrinho após envio
             carrinho = [];
             salvarCarrinho();
-            atualizarTodosCards();
-            atualizarCarrinhoUI();
+            atualizarUICompleta();
             
             nomeCliente.value = '';
             telefone.value = '';
@@ -685,14 +896,17 @@
             const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
             if (bsOffcanvas) bsOffcanvas.hide();
         }
-        
+
+        // ========== EVENT LISTENERS GLOBAIS ==========
         btnLimpar.addEventListener('click', limparCarrinho);
         btnFinalizar.addEventListener('click', finalizarPedido);
-        
+
+        // ========== INICIALIZAÇÃO ==========
         function init() {
             renderizarTodosProdutos();
             carregarCarrinho();
         }
+        
         init();
     </script>
 </body>

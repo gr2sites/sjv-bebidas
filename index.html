@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>S J V DE BEBIDAS - Cardápio Digital</title>
+    
+    <!-- Bootstrap 5 + Icons + Tailwind CDN (styles only) + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== CUSTOM STYLES - IDENTIDADE S J V DE BEBIDAS ========== */
+        :root {
+            --primary-vermelho: #c41e3a;
+            --primary-dourado: #d4af37;
+            --primary-escuro: #1a1a1a;
+            --primary-cinza: #2c2c2c;
+            --primary-dourado-claro: #f5e6b0;
+            --primary-bg-claro: #fef8e7;
+            
+            --orange-500: #c41e3a;
+            --orange-100: #fce4e8;
+            --orange-50: #fff5f6;
+        }
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        body {
+            background-color: var(--primary-bg-claro);
+            color: var(--primary-escuro);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-escuro) 0%, var(--primary-cinza) 100%);
+            border-bottom: 3px solid var(--primary-dourado);
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+        }
+        .badge {
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+        }
+        .card {
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-dourado);
+        }
+        .produto-imagem {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: linear-gradient(145deg, #fef5e6, #fff8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .produto-imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .produto-imagem-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #fef5e6, #fff8f0);
+        }
+        .produto-imagem-placeholder i {
+            font-size: 4rem;
+            color: var(--primary-vermelho);
+            opacity: 0.7;
+        }
+        .offcanvas {
+            width: 100% !important;
+        }
+        @media (min-width: 576px) {
+            .offcanvas {
+                width: 420px !important;
+            }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            animation: slideIn 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .container-fluid { padding-left: 0.75rem; padding-right: 0.75rem; }
+        }
+        .bg-orange-500 { background-color: var(--primary-vermelho); }
+        .bg-orange-100 { background-color: var(--orange-100); }
+        .bg-orange-50 { background-color: var(--orange-50); }
+        .text-orange-500 { color: var(--primary-vermelho); }
+        .bg-gray-800 { background-color: var(--primary-escuro); }
+        .text-dark { color: var(--primary-escuro); }
+        .form-control, .form-select {
+            border-radius: 0.75rem;
+            border-color: #e5e7eb;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-vermelho);
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        
+        /* CORREÇÃO: Remove barra lateral de rolagem */
+        #produtosContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        @media (max-width: 640px) {
+            #produtosContainer {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        input[readonly] {
+            background-color: #f9fafb;
+            cursor: default;
+        }
+        
+        .container-fluid {
+            overflow-x: hidden;
+        }
+        
+        .row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+        
+        .col {
+            padding-right: 0;
+            padding-left: 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+        .logo-imagem {
+            max-width: 350px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        .logo-imagem:hover {
+            transform: scale(1.02);
+        }
+        .logo-subtexto {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            border-top: 1px solid var(--primary-dourado);
+            padding-top: 0.3rem;
+            margin-top: 0.3rem;
+            display: inline-block;
+        }
+        @media (max-width: 576px) {
+            .logo-imagem {
+                max-width: 260px;
+            }
+            .logo-subtexto { font-size: 0.7rem; letter-spacing: 2px; }
+            .produto-imagem {
+                height: 140px;
+            }
+        }
+        footer {
+            background: linear-gradient(135deg, var(--primary-escuro) 0%, #111111 100%);
+            border-top: 2px solid var(--primary-dourado);
+        }
+        .welcome-banner {
+            background: linear-gradient(110deg, var(--orange-100) 0%, #fff2e0 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        /* ========== CORREÇÃO PARA TELAS MÓVEIS (SEM ALTERAR CÓDIGO EXISTENTE) ========== */
+        @media (max-width: 768px) {
+            .produto-imagem {
+                height: auto !important;
+                min-height: 140px;
+                max-height: 200px;
+                padding: 10px 0;
+            }
+            
+            .produto-imagem img {
+                height: auto !important;
+                width: auto !important;
+                max-width: 90% !important;
+                max-height: 180px !important;
+                object-fit: contain !important;
+                object-position: center;
+            }
+            
+            .produto-imagem-placeholder {
+                padding: 20px 0;
+                min-height: 140px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .produto-imagem-placeholder i {
+                font-size: 3rem;
+            }
+            
+            /* Ajuste do card para não quebrar layout */
+            .card-body {
+                padding: 0.50rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .produto-imagem {
+                min-height: 120px;
+                max-height: 160px;
+            }
+            
+            .produto-imagem img {
+                max-height: 200px !important;
+            }
+            
+            .produto-imagem-placeholder i {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Garantia de que imagens com erro também fiquem boas */
+        .produto-imagem img[src=""],
+        .produto-imagem img:not([src]) {
+            display: none;
+        }
+
+        .produto-imagem:has(img[src=""]),
+        .produto-imagem:has(img:not([src])) {
+            background: linear-gradient(145deg, #fef5e6, #fff8f0);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="text-white sticky-top shadow-lg">
+        <div class="container-fluid px-4">
+            <div class="logo-container">
+                <img src="imagens/logo-02.png" alt="S J V DE BEBIDAS" class="logo-imagem mx-auto">
+                <div class="logo-subtexto">DISTRIBUIDORA DE BEBIDAS</div>
+                <div class="mt-2 d-flex justify-content-center gap-3">
+                    <button class="btn position-relative rounded-circle shadow-sm" id="btnCarrinho" data-bs-toggle="offcanvas" data-bs-target="#carrinhoOffcanvas" style="width: 42px; height: 42px; background-color: var(--primary-dourado); color: var(--primary-escuro); border: none;">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="badgeCarrinho" style="display: none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-5" style="background-color: var(--primary-bg-claro);">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                <h2 class="fw-bold mb-0" style="border-left: 5px solid var(--primary-dourado); padding-left: 15px;">Catálogo de Bebidas</h2>
+                <small class="text-muted"><i class="bi bi-tag-fill" style="color: var(--primary-dourado);"></i> Preços especiais</small>
+            </div>
+            <div id="produtosContainer" class="row g-4" style="display: grid;"></div>
+        </div>
+    </section>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="carrinhoOffcanvas" aria-labelledby="carrinhoLabel">
+        <div class="offcanvas-header" style="background: linear-gradient(135deg, var(--primary-escuro) 0%, #2c2418 100%); color: white; border-bottom: 2px solid var(--primary-dourado);">
+            <h5 class="offcanvas-title fw-bold" id="carrinhoLabel"><i class="bi bi-cart-fill" style="color: var(--primary-dourado);"></i> Meu Pedido - SJV</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0 d-flex flex-column">
+            <div id="carrinhoItens" class="p-3 border-bottom">
+                <h6 class="fw-bold mb-3"><i class="bi bi-bag"></i> Itens <span class="badge ms-1" id="badgeItens" style="background-color: var(--primary-dourado); color: var(--primary-escuro);">0</span></h6>
+                <div id="listaItens">...</div>
+            </div>
+            <div class="p-3 border-bottom" style="background-color: #fff8eb;">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span class="fw-bold" id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="d-flex justify-content-between fs-5 fw-bold" style="color: var(--primary-vermelho); border-top: 2px solid var(--primary-dourado); padding-top: 12px; margin-top: 8px;">
+                    <span>Total:</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+            </div>
+            <div id="formularioPedido" class="p-3" style="display: none;">
+                <h6 class="fw-bold mb-3" style="color: var(--primary-escuro);"><i class="bi bi-pencil-square"></i> Informações do Pedido</h6>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Modo de Entrega <span class="badge" style="background-color: var(--primary-dourado); color: var(--primary-escuro);">obrigatório</span></label>
+                    <select class="form-select" id="modoEntrega">
+                        <option value="entrega">🚚 Delivery (Entrega)</option>
+                        <option value="retirada">🏬 Retirada no Balcão SJV</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Forma de Pagamento</label>
+                    <select class="form-select" id="formaPagamento">
+                        <option value="dinheiro">💰 Dinheiro</option>
+                        <option value="cartao">💳 Cartão (crédito/débito)</option>
+                        <option value="pix">📱 PIX</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Seu nome <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nomeCliente" placeholder="Digite seu nome completo">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">WhatsApp / Telefone <span class="text-danger">*</span></label>
+                    <input type="tel" class="form-control" id="telefone" placeholder="(16) 99999-9999">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email (opcional)</label>
+                    <input type="email" class="form-control" id="email" placeholder="seuemail@exemplo.com">
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn fw-semibold" id="btnLimpar" style="background-color: #fff0f0; border-color: var(--primary-vermelho); color: var(--primary-vermelho);"><i class="bi bi-trash3"></i> Limpar Carrinho</button>
+                    <button class="btn fw-bold py-2" id="btnFinalizar" style="background-color: var(--primary-dourado); color: var(--primary-escuro); border: none;"><i class="bi bi-whatsapp"></i> Enviar Pedido via WhatsApp</button>
+                </div>
+            </div>
+            <div class="p-3 text-center text-muted small mt-auto" style="border-top: 1px solid #e2d5b6;">
+                <i class="bi bi-shield-check" style="color: var(--primary-dourado);"></i> Pedido enviado diretamente à S J V DE BEBIDAS
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-white text-center py-4 mt-5">
+        <p class="mb-0">🥂 S J V DE BEBIDAS - Sua melhor escolha em bebidas <i class="bi bi-cup-straw" style="color: var(--primary-dourado);"></i></p>
+        <small class="text-muted">Desenvolvido com elegância e sabor</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Catálogo de produtos
+        const produtos = {
+            refrigerantes: [
+                { id: 1, nome: 'Coca-Cola 350ml', preco: 5.00, categoria: 'refrigerantes', imagem: 'imagens/Amstel-lata.png' },
+                { id: 2, nome: 'Coca-Cola 2L', preco: 12.00, categoria: 'refrigerantes', imagem: 'imagens/Amstel-600.png' },
+                { id: 3, nome: 'Coca-Cola Zero 350ml', preco: 5.00, categoria: 'refrigerantes', imagem: 'imagens/cocazero.jpg' },
+                { id: 4, nome: 'Guaraná Antarctica 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/guarana350.jpg' },
+                { id: 5, nome: 'Guaraná Antarctica 2L', preco: 10.00, categoria: 'refrigerantes', imagem: 'imagens/guarana2l.jpg' },
+                { id: 6, nome: 'Fanta Laranja 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/fanta.jpg' },
+                { id: 7, nome: 'Fanta Uva 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/fantauva.jpg' },
+                { id: 8, nome: 'Sprite 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/sprite.jpg' },
+                { id: 9, nome: 'Pepsi 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/pepsi.jpg' },
+                { id: 10, nome: 'Kuat 350ml', preco: 4.50, categoria: 'refrigerantes', imagem: 'imagens/kuat.jpg' },
+            ],
+        };
+
+        function getTodosProdutos() {
+            return Object.values(produtos).flat();
+        }
+
+        let carrinho = [];
+
+        // DOM elements
+        const produtosContainer = document.getElementById('produtosContainer');
+        const badgeCarrinho = document.getElementById('badgeCarrinho');
+        const badgeItens = document.getElementById('badgeItens');
+        const listaItens = document.getElementById('listaItens');
+        const subtotalEl = document.getElementById('subtotal');
+        const totalEl = document.getElementById('total');
+        const formularioPedido = document.getElementById('formularioPedido');
+        const btnLimpar = document.getElementById('btnLimpar');
+        const btnFinalizar = document.getElementById('btnFinalizar');
+        const nomeCliente = document.getElementById('nomeCliente');
+        const telefone = document.getElementById('telefone');
+        const email = document.getElementById('email');
+        const modoEntrega = document.getElementById('modoEntrega');
+        const formaPagamento = document.getElementById('formaPagamento');
+
+        function salvarCarrinho() {
+            localStorage.setItem('carrinho_sjv', JSON.stringify(carrinho));
+        }
+
+        function carregarCarrinho() {
+            const saved = localStorage.getItem('carrinho_sjv');
+            if (saved) {
+                carrinho = JSON.parse(saved);
+                atualizarTodosCards();
+                atualizarCarrinhoUI();
+            }
+        }
+
+        // Função para atualizar todos os cards baseado no carrinho atual
+        function atualizarTodosCards() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const produtoId = parseInt(card.getAttribute('data-produto-id'));
+                if (produtoId) {
+                    const itemCarrinho = carrinho.find(item => item.id === produtoId);
+                    const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
+                    
+                    const inputQuantidade = card.querySelector('.quantidade-input');
+                    const botaoAdicionar = card.querySelector('.btn-adicionar');
+                    
+                    if (inputQuantidade) {
+                        inputQuantidade.value = quantidade;
+                    }
+                    
+                    if (botaoAdicionar) {
+                        if (quantidade > 0) {
+                            botaoAdicionar.innerHTML = '<i class="bi bi-check-circle-fill"></i> Adicionado';
+                            botaoAdicionar.style.backgroundColor = '#c41e3a';
+                            botaoAdicionar.style.borderColor = '#c41e3a';
+                            botaoAdicionar.style.color = 'white';
+                            botaoAdicionar.classList.remove('btn-outline-warning');
+                            botaoAdicionar.classList.add('btn-success');
+                        } else {
+                            botaoAdicionar.innerHTML = '<i class="bi bi-cart-plus"></i> Adicionar';
+                            botaoAdicionar.style.backgroundColor = 'transparent';
+                            botaoAdicionar.style.borderColor = 'var(--primary-dourado)';
+                            botaoAdicionar.style.color = 'var(--primary-escuro)';
+                            botaoAdicionar.classList.remove('btn-success');
+                            botaoAdicionar.classList.add('btn-outline-warning');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Função para atualizar apenas o card específico
+        function atualizarCard(produtoId) {
+            const card = document.querySelector(`.card[data-produto-id="${produtoId}"]`);
+            if (card) {
+                const itemCarrinho = carrinho.find(item => item.id === produtoId);
+                const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
+                
+                const inputQuantidade = card.querySelector('.quantidade-input');
+                const botaoAdicionar = card.querySelector('.btn-adicionar');
+                
+                if (inputQuantidade) {
+                    inputQuantidade.value = quantidade;
+                }
+                
+                if (botaoAdicionar) {
+                    if (quantidade > 0) {
+                        botaoAdicionar.innerHTML = '<i class="bi bi-check-circle-fill"></i> Adicionado';
+                        botaoAdicionar.style.backgroundColor = '#c41e3a';
+                        botaoAdicionar.style.borderColor = '#c41e3a';
+                        botaoAdicionar.style.color = 'white';
+                        botaoAdicionar.classList.remove('btn-outline-warning');
+                        botaoAdicionar.classList.add('btn-success');
+                    } else {
+                        botaoAdicionar.innerHTML = '<i class="bi bi-cart-plus"></i> Adicionar';
+                        botaoAdicionar.style.backgroundColor = 'transparent';
+                        botaoAdicionar.style.borderColor = 'var(--primary-dourado)';
+                        botaoAdicionar.style.color = 'var(--primary-escuro)';
+                        botaoAdicionar.classList.remove('btn-success');
+                        botaoAdicionar.classList.add('btn-outline-warning');
+                    }
+                }
+            }
+        }
+
+        // Renderização dos cards (apenas uma vez na inicialização)
+        function renderizarTodosProdutos() {
+            const produtosList = getTodosProdutos();
+            produtosContainer.innerHTML = '';
+            
+            produtosList.forEach(produto => {
+                const itemCarrinho = carrinho.find(item => item.id === produto.id);
+                const quantidade = itemCarrinho ? itemCarrinho.quantidade : 0;
+                
+                let iconeBebida = 'bi-cup-straw';
+                if (produto.categoria === 'refrigerantes') iconeBebida = 'bi-droplet';
+                
+                const col = document.createElement('div');
+                col.className = 'col';
+                col.innerHTML = `
+                    <div class="card h-100 border-2 shadow-sm rounded-4 overflow-hidden" data-produto-id="${produto.id}">
+                        <div class="produto-imagem">
+                            <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'produto-imagem-placeholder\'><i class=\'bi ${iconeBebida}\'></i></div>';">
+                        </div>
+                        <div class="card-body d-flex flex-column p-3">
+                            <h6 class="card-title fw-bold text-dark">${produto.nome}</h6>
+                            <p class="text-muted small mb-2">Bebida exclusiva SJV</p>
+                            <p class="fw-bold fs-4 mb-3" style="color: var(--primary-vermelho);">R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
+                            <div class="d-flex gap-2 align-items-center mt-auto">
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-decrement" data-id="${produto.id}"><i class="bi bi-dash-lg"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center bg-light quantidade-input" value="${quantidade}" readonly style="max-width: 55px; font-weight:600;">
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle btn-increment" data-id="${produto.id}"><i class="bi bi-plus-lg"></i></button>
+                            </div>
+                            <button class="btn fw-semibold mt-3 w-100 btn-adicionar ${quantidade > 0 ? 'btn-success text-white' : 'btn-outline-warning'}" data-id="${produto.id}" data-nome="${produto.nome}" data-preco="${produto.preco}" style="${quantidade > 0 ? 'background-color: #c41e3a; border-color:#c41e3a;' : 'border-color: var(--primary-dourado); color:var(--primary-escuro);'}">
+                                ${quantidade > 0 ? '<i class="bi bi-check-circle-fill"></i> Adicionado' : '<i class="bi bi-cart-plus"></i> Adicionar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                produtosContainer.appendChild(col);
+            });
+            
+            // Adicionar event listeners
+            document.querySelectorAll('.btn-increment').forEach(btn => {
+                btn.removeEventListener('click', handleIncrement);
+                btn.addEventListener('click', handleIncrement);
+            });
+            document.querySelectorAll('.btn-decrement').forEach(btn => {
+                btn.removeEventListener('click', handleDecrement);
+                btn.addEventListener('click', handleDecrement);
+            });
+            document.querySelectorAll('.btn-adicionar').forEach(btn => {
+                btn.removeEventListener('click', handleAdd);
+                btn.addEventListener('click', handleAdd);
+            });
+        }
+        
+        // Handlers
+        function handleIncrement(e) {
+            e.stopPropagation();
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            const produto = getTodosProdutos().find(p => p.id === id);
+            if (produto) {
+                const item = carrinho.find(i => i.id === id);
+                if (item) {
+                    item.quantidade++;
+                } else {
+                    carrinho.push({ id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
+                }
+                salvarCarrinho();
+                atualizarCard(id);
+                atualizarCarrinhoUI();
+            }
+        }
+        
+        function handleDecrement(e) {
+            e.stopPropagation();
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            const item = carrinho.find(i => i.id === id);
+            if (item) {
+                if (item.quantidade > 1) {
+                    item.quantidade--;
+                } else {
+                    carrinho = carrinho.filter(i => i.id !== id);
+                }
+                salvarCarrinho();
+                atualizarCard(id);
+                atualizarCarrinhoUI();
+            }
+        }
+        
+        function handleAdd(e) {
+            e.stopPropagation();
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            const nome = e.currentTarget.getAttribute('data-nome');
+            const preco = parseFloat(e.currentTarget.getAttribute('data-preco'));
+            
+            const item = carrinho.find(i => i.id === id);
+            if (item) {
+                item.quantidade++;
+            } else {
+                carrinho.push({ id, nome, preco, quantidade: 1 });
+            }
+            salvarCarrinho();
+            atualizarCard(id);
+            atualizarCarrinhoUI();
+        }
+        
+        function removerDoCarrinho(id) {
+            carrinho = carrinho.filter(i => i.id !== id);
+            salvarCarrinho();
+            atualizarCard(id);
+            atualizarCarrinhoUI();
+        }
+        
+        function limparCarrinho() {
+            if (confirm('❓ Tem certeza que deseja limpar todo o carrinho?')) {
+                carrinho = [];
+                salvarCarrinho();
+                atualizarTodosCards();
+                atualizarCarrinhoUI();
+            }
+        }
+        
+        function atualizarCarrinhoUI() {
+            const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+            const totalItens = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+            
+            if (totalItens > 0) {
+                badgeCarrinho.style.display = 'inline-block';
+                badgeCarrinho.textContent = totalItens;
+                badgeItens.textContent = totalItens;
+                formularioPedido.style.display = 'block';
+            } else {
+                badgeCarrinho.style.display = 'none';
+                formularioPedido.style.display = 'none';
+                badgeItens.textContent = '0';
+            }
+            
+            subtotalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            totalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            
+            // Renderizar itens do carrinho
+            if (!carrinho.length) {
+                listaItens.innerHTML = '<p class="text-muted text-center py-4"><i class="bi bi-cart-x"></i> Seu carrinho está vazio</p>';
+            } else {
+                listaItens.innerHTML = carrinho.map(item => `
+                    <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 shadow-sm mb-2 border">
+                        <div>
+                            <p class="fw-semibold mb-1">${item.nome}</p>
+                            <small class="text-muted"><span class="badge me-2" style="background-color: var(--primary-dourado); color: #1a1a1a;">${item.quantidade}</span> R$ ${item.preco.toFixed(2).replace('.', ',')}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger rounded-circle btn-remover-carrinho" data-id="${item.id}"><i class="bi bi-trash3"></i></button>
+                    </div>
+                `).join('');
+                
+                document.querySelectorAll('.btn-remover-carrinho').forEach(btn => {
+                    btn.removeEventListener('click', handleRemove);
+                    btn.addEventListener('click', handleRemove);
+                });
+            }
+        }
+        
+        function handleRemove(e) {
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            removerDoCarrinho(id);
+        }
+        
+        function finalizarPedido() {
+            if (!nomeCliente.value.trim() || !telefone.value.trim()) {
+                alert('⚠️ Preencha os campos obrigatórios: Nome e Telefone/WhatsApp.');
+                return;
+            }
+            if (carrinho.length === 0) {
+                alert('Seu carrinho está vazio. Adicione itens antes de finalizar!');
+                return;
+            }
+            
+            const total = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+            const itensTexto = carrinho.map(i => `${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2).replace('.', ',')})`).join('\n');
+            const entregaText = modoEntrega.value === 'entrega' ? '🚚 Delivery' : '🏬 Retirada no local';
+            const pagamentoText = formaPagamento.options[formaPagamento.selectedIndex]?.text || formaPagamento.value;
+            const mensagem = `*🟡 NOVO PEDIDO - S J V DE BEBIDAS 🟡*\n\n*Cliente:* ${nomeCliente.value.trim()}\n*Telefone:* ${telefone.value.trim()}\n*Email:* ${email.value.trim() || 'Não informado'}\n*Entrega:* ${entregaText}\n*Pagamento:* ${pagamentoText}\n\n*ITENS DO PEDIDO:*\n${itensTexto}\n\n*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*\n\nAgradecemos pela preferência! 🍻`;
+            const numeroWhats = '5516991234567';
+            const url = `https://wa.me/${numeroWhats}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+            
+            carrinho = [];
+            salvarCarrinho();
+            atualizarTodosCards();
+            atualizarCarrinhoUI();
+            
+            nomeCliente.value = '';
+            telefone.value = '';
+            email.value = '';
+            modoEntrega.value = 'entrega';
+            formaPagamento.value = 'dinheiro';
+            alert('✅ Pedido enviado! Você será redirecionado para o WhatsApp.');
+            
+            const offcanvasEl = document.getElementById('carrinhoOffcanvas');
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (bsOffcanvas) bsOffcanvas.hide();
+        }
+        
+        btnLimpar.addEventListener('click', limparCarrinho);
+        btnFinalizar.addEventListener('click', finalizarPedido);
+        
+        function init() {
+            renderizarTodosProdutos();
+            carregarCarrinho();
+        }
+        init();
+    </script>
+</body>
+</html>
